@@ -18,6 +18,8 @@ inline: 'yum -y install ansible'
          v.memory = 512
          v.cpus = 2
        end
+       loadbalancer01.vm.provision "shell",
+         inline: 'ansible-playbook -i "localhost," -c local /vagrant/ansible/install-haproxy.yml'
     end
 ###loadbalancer02
    config.vm.define "loadbalancer02" do |loadbalancer02|
