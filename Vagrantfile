@@ -6,6 +6,9 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
+# Install ansible
+config.vm.provision "shell",
+inline: 'yum -y install ansible' 
 ### loadbalancer01
    config.vm.define "loadbalancer01" do |loadbalancer01|
        loadbalancer01.vm.box = "rchouinard/oracle-65-x64"
