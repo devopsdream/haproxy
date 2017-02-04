@@ -1,0 +1,18 @@
+---
+- hosts: all
+  sudo: yes
+  
+  tasks:
+  - name: Install Haproxy 
+    yum: name=haproxy state=present
+  - name: Configure haproxy server 
+    template: 
+     src: configs/haproxy.cfg.j2
+     dest: /etc/haproxy/haproxy.cfg 
+    notify:
+    - restart haproxy service
+  - name: Start haproxy service and enable on boot
+    service: name=haproxy state=started
+  handlers:
+  - name: restart haproxy service
+    service: name=haproxy state=restarted
