@@ -1,0 +1,15 @@
+---
+- hosts: all
+  sudo: yes
+  
+  tasks:
+  - name: Install Apache Web Servers
+    yum: name=httpd state=present
+  - name: Enable HTTPD service
+    service: name=httpd enabled=yes state=started
+  - name: Deploy sample application
+    copy:
+     src: demo_app/index.html
+     dest: /var/www/html/index.html
+
+  

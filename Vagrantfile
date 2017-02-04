@@ -30,15 +30,23 @@ inline: 'yum -y install ansible'
          v.memory = 512
          v.cpus = 2
        end
+       loadbalancer02.vm.provision "shell",
+         inline: 'ansible-playbook -i "localhost," -c local /vagrant/ansible/install-haproxy.yml'
     end
 ###web2
-   config.vm.define "web2" do |web2|
-       web2.vm.box = "rchouinard/oracle-65-x64"
-       web2.vm.hostname = "web2"
-       web2.vm.network "private_network", ip:"192.168.50.6"
-       web2.vm.provider "virtualbox" do |v|
-         v.memory = 512
-         v.cpus = 2
-       end
-    end
+{
+ 'web2' => '192.168.50.6',
+ 'web' => '192.168.50.2',
+}.each do |host_name, ip| 
+   config.vm.define host_name do |host|
+        host.vm.box = 'rchouinard/oracle-65-x64'
+        host.vm.boot_timeout = 600
+        host.vm.network 'private_network', ip: ip
+        host.vm.hostname = "#{host_name}.devopsdream.io"
+        host.vm.provision "shell",
+         inline: 'ansible-playbook -i "localhost," -c local /vagrant/ansible/install-web-haproxy.yml'
+   end 
+ end 
+
+##end of file
 end
